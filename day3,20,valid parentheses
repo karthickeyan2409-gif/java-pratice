@@ -1,0 +1,28 @@
+bool isValid(char* s) {
+    int len = strlen(s);
+    char stack[len + 1];
+    int top = -1;
+
+    for (int i = 0; i < len; i++) {
+        char c = s[i];
+
+        if (c == '(' || c == '{' || c == '[') {
+            // Push opening bracket onto stack
+            stack[++top] = c;
+        } else {
+            // It's a closing bracket — stack must not be empty
+            if (top == -1) {
+                return false;
+            }
+
+            char last = stack[top--];
+
+            if (c == ')' && last != '(') return false;
+            if (c == '}' && last != '{') return false;
+            if (c == ']' && last != '[') return false;
+        }
+    }
+
+    // Valid only if all opened brackets were closed
+    return top == -1;
+}
