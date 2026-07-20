@@ -1,0 +1,38 @@
+int divide(int dividend, int divisor) {
+    // Handle overflow: INT_MIN / -1 overflows 32-bit signed range
+    if (dividend == INT_MIN && divisor == -1) {
+        return INT_MAX;
+    }
+
+    // Determine sign of result
+    int negative = ((dividend < 0) != (divisor < 0));
+
+    // Work with positive values using unsigned to safely hold abs(INT_MIN)
+    unsigned int dvd = (dividend == INT_MIN) ? (unsigned int)INT_MAX + 1 : (unsigned int)abs(dividend);
+    unsigned int dvs = (divisor == INT_MIN) ? (unsigned int)INT_MAX + 1 : (unsigned int)abs(divisor);
+
+    unsigned int quotient = 0;
+
+    while (dvd >= dvs) {
+        unsigned int temp = dvs;
+        unsigned int multiple = 1;
+
+        while (dvd >= (temp << 1) && (temp << 1) > temp) {
+            temp <<= 1;
+            multiple <<= 1;
+        }
+
+        dvd -= temp;
+        quotient += multiple;
+    }
+
+    if (negative) {
+        return (int)(-quotient);   // negate in unsigned space first, then cast
+    }
+
+    if (quotient > (unsigned int)INT_MAX) {
+        return INT_MAX;
+    }
+
+    return (int)quotient;
+}
