@@ -1,0 +1,43 @@
+class Solution {
+    public boolean isNumber(String s) {
+        int i = 0;
+        int n = s.length();
+        
+        // Skip leading whitespace (not required by LeetCode's current spec, but harmless)
+        
+        boolean seenDigit = false;
+        boolean seenDot = false;
+        boolean seenExponent = false;
+        
+        for (i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            
+            if (Character.isDigit(c)) {
+                seenDigit = true;
+            } else if (c == '+' || c == '-') {
+                // Sign must be first char overall, or right after 'e'/'E'
+                if (i > 0 && s.charAt(i - 1) != 'e' && s.charAt(i - 1) != 'E') {
+                    return false;
+                }
+            } else if (c == '.') {
+                // No second dot, and no dot after an exponent
+                if (seenDot || seenExponent) {
+                    return false;
+                }
+                seenDot = true;
+            } else if (c == 'e' || c == 'E') {
+                // Only one exponent, and there must be digits before it
+                if (seenExponent || !seenDigit) {
+                    return false;
+                }
+                seenExponent = true;
+                seenDigit = false; // require at least one digit after 'e' too
+            } else {
+                // Any other character is invalid
+                return false;
+            }
+        }
+        
+        return seenDigit;
+    }
+}
