@@ -1,0 +1,29 @@
+/**
+ * @param {*} obj
+ * @param {Function} classFunction
+ * @return {boolean}
+ */
+var checkIfInstanceOf = function(obj, classFunction) {
+    // Guard against null/undefined or a non-function classFunction
+    if (obj === null || obj === undefined || typeof classFunction !== 'function') {
+        return false;
+    }
+
+    // Primitives (numbers, strings, booleans, etc.) get boxed so we can
+    // walk their prototype chain the same way as objects.
+    let proto = Object(obj).__proto__;
+    const targetProto = classFunction.prototype;
+
+    while (proto !== null) {
+        if (proto === targetProto) {
+            return true;
+        }
+        proto = proto.__proto__;
+    }
+
+    return false;
+};
+
+/**
+ * checkIfInstanceOf(new Date(), Date); // true
+ */
